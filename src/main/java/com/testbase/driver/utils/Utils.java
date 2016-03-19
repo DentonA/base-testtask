@@ -11,7 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import static com.testbase.driver.Config.driver;
 
 /**
- * Created by Denton on (019) 19.03.16.
+ * This class contains Utility methods, such as explicit waits, random strings generator, etc.
  */
 public class Utils {
     public static void waitForMainPageOpen() {

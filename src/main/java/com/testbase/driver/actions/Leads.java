@@ -13,7 +13,7 @@ import org.testng.Assert;
 import static com.testbase.driver.pages.Pages.*;
 
 /**
- * Created by Denton on (018) 18.03.16.
+ * This class contains actions connected with Leads in Base Platform (both GUI operated and API)
  */
 public class Leads {
     public static void createNewLead(Lead lead) {
@@ -63,8 +63,7 @@ public class Leads {
 
     public static void assertStatusName(Lead lead, String statusName) {
         Navigation.toLeadsPage();
-        WebElement leadNamesBlock = leadsPage.getLeadNamesBlock();
-        leadNamesBlock.findElement(By.xpath("//a[@class='lead-name' and contains(text(), '" + lead.getLastName() + "')]")).click();
+        leadsPage.getLead(lead.getName(), lead.getLastName()).click();
         Utils.waitForLeadProfilePageOpen();
         Assert.assertEquals(leadProfilePage.getStatusName().getText().toLowerCase(), statusName.toLowerCase());
         System.out.println("Assertion successful");

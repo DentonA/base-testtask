@@ -11,7 +11,7 @@ import static com.testbase.driver.pages.Pages.loginPage;
 import static com.testbase.driver.pages.Pages.mainMenu;
 
 /**
- * Created by Denton on (018) 18.03.16.
+ * This class contains actions connected with login / logout to the Base Platform
  */
 public class Auth {
     public static void logIn() {

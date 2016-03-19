@@ -4,7 +4,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
 /**
- * Created by Denton on (018) 18.03.16.
+ * This class represents all WebElements that are located on the Main dashboard page of the
+ * Base Platform
  */
 public class MainPage {
     private WebDriver driver;
@@ -15,6 +16,4 @@ public class MainPage {
     }
 
     // Getters & Setters
-
-
 }

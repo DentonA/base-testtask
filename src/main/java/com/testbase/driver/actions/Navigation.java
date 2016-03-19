@@ -6,7 +6,7 @@ import org.openqa.selenium.NoSuchElementException;
 import static com.testbase.driver.pages.Pages.mainMenu;
 
 /**
- * Created by Denton on (018) 18.03.16.
+ * This class contains actions that navigate test execution to different pages of the Base Platform
  */
 public class Navigation {
     public static void toMainPage() {

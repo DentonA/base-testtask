@@ -1,31 +1,28 @@
 package com.testbase.driver.utils;
 
 import com.testbase.driver.Config;
+import com.testbase.driver.pages.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static com.testbase.driver.Config.driver;
-import static com.testbase.driver.pages.Pages.mainMenu;
-import static com.testbase.driver.pages.Pages.leadsPage;
-import static com.testbase.driver.pages.Pages.leadProfilePage;
 
 /**
  * This class contains Utility methods, such as element existence checks, explicit waits, etc.
  */
 public class Utils {
-    public static boolean exists(String selector, String selectorType) {
+    public static boolean exists(String selector, SelectorType type) {
         Config.changeImplicitWait(Config.MIN_TIMEOUT);
         boolean exists = false;
-        switch (selectorType.toLowerCase()) {
-            case "xpath":
+        switch (type) {
+            case XPATH:
                 exists = !driver.findElements(By.xpath(selector)).isEmpty();
                 break;
-            case "id":
+            case ID:
                 exists = !driver.findElements(By.id(selector)).isEmpty();
                 break;
-            case "class":
-            case "classname":
+            case CLASSNAME:
                 exists = !driver.findElements(By.className(selector)).isEmpty();
                 break;
         }
@@ -34,22 +31,30 @@ public class Utils {
     }
 
     public static void waitForMainPageOpen() {
-        new WebDriverWait(driver, Config.MAX_EXPLICIT_TIMEOUT)
-                .until(ExpectedConditions.elementToBeClickable(mainMenu.getMainMenuMainDashboardButton()));
+        wait(By.xpath(MainMenu.mainMenuMainDashboardButtonSel));
     }
 
     public static void waitForLeadsPageOpen() {
-        new WebDriverWait(driver, Config.MAX_EXPLICIT_TIMEOUT)
-                .until(ExpectedConditions.elementToBeClickable(leadsPage.getNewLeadButton()));
+        wait(By.xpath("//ul[@class='object-list-items leads']/li[@class='item empty'] | //ul[@class='object-list-items leads']/li[contains(@id, 'lead-')]"));
     }
 
     public static void waitForLeadProfilePageOpen() {
-        new WebDriverWait(driver, Config.MAX_EXPLICIT_TIMEOUT)
-                .until(ExpectedConditions.elementToBeClickable(leadProfilePage.getLeadFullName()));
+        wait(By.xpath(LeadProfilePage.statusDropdownMenuButtonSel));
     }
 
     public static void waitForMainDropdownMenuOpen() {
-        new WebDriverWait(driver, Config.MAX_EXPLICIT_TIMEOUT)
-                .until(ExpectedConditions.elementToBeClickable(mainMenu.getDropdownMenuOpened()));
+        wait(By.xpath(MainMenu.dropdownMenuOpenedSel));
+    }
+
+    public static void waitForAddNewLeadPageOpen() {
+        wait(By.className(AddNewLeadPage.saveButtonSel));
+    }
+
+    public static void waitForSettingsPageOpen() {
+        wait(By.xpath(SettingsPage.leftMenuSel));
+    }
+
+    private static void wait(By by) {
+        new WebDriverWait(driver, Config.MAX_EXPLICIT_TIMEOUT).until(ExpectedConditions.elementToBeClickable(by));
     }
 }

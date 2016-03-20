@@ -1,12 +1,18 @@
 package com.testbase.driver.pages;
 
+import com.testbase.driver.entities.Lead;
+import com.testbase.driver.utils.SelectorType;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
+
+import static com.testbase.driver.utils.TestLogger.info;
+import static com.testbase.driver.utils.Utils.exists;
 
 /**
  * This class represents all WebElements that are located on the Leads page of the
@@ -26,6 +32,7 @@ public class LeadsPage {
     public static final String expandActiveFiltersButtonSel = "//a[@class='btn expand-active-filters']";
     public static final String clearAllFiltersButtonSel = "//a[@class='btn clear-all-filters']";
     // single lead elements
+    public static final String singleUnknownLeadSel = "//a[@class='lead-name' and contains(text(), '%LEADNAME%')]";
     public static final String selectThisLeadSel = "//div[@class='select']/input";
     public static final String editThisLeadButtonSel = "//a[@class='hoverable edit']";
     public static final String convertThisLeadButtonSel = "//div[@class='quick-info hoverable']/span/a";
@@ -80,6 +87,33 @@ public class LeadsPage {
     public LeadsPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
         this.driver = driver;
+    }
+
+    public void clickNewLeadButton() {
+        if (exists(newLeadButtonSel, SelectorType.ID)) {
+            newLeadButton.click();
+        } else {
+            info("Fail clicking 'new lead' button. It doesn't exist on this page.");
+            throw new NoSuchElementException("Couldn't find 'new lead' button");
+        }
+    }
+
+    public boolean findAndOpenLeadProfile(Lead lead) {
+        String fullName;
+        if (lead.getName() != null && !lead.getName().equals("")) {
+            fullName = lead.getName() + " " + lead.getLastName();
+        } else {
+            fullName = lead.getLastName();
+        }
+        String leadSelector = singleUnknownLeadSel.replace("%LEADNAME%", fullName);
+        if (exists(leadSelector, SelectorType.XPATH)) {
+            info("Lead with fullname '" + fullName + "' found. Opening profile.");
+            allLeadNamesBlock.findElement(By.xpath(leadSelector)).click();
+            return true;
+        } else {
+            info("Lead with fullname '" + fullName + "' doesn't exist");
+        }
+        return false;
     }
 
     // Getters & Setters
@@ -142,15 +176,5 @@ public class LeadsPage {
 
     public WebElement getConvertThisLeadButton() {
         return convertThisLeadButton;
-    }
-
-    public WebElement getLead(String name, String lastName) {
-        String fullName;
-        if (name != null && !name.equals("")) {
-            fullName = name + " " + lastName;
-        } else {
-            fullName = lastName;
-        }
-        return allLeadNamesBlock.findElement(By.xpath("//a[@class='lead-name' and contains(text(), '" + fullName + "')]"));
     }
 }

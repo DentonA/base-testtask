@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 
 import static com.testbase.driver.pages.Pages.settingsPage;
+import static com.testbase.driver.utils.TestLogger.info;
 
 /**
  * This class contains actions that make some changes in the client's settings of the Base Platform
@@ -13,9 +14,11 @@ import static com.testbase.driver.pages.Pages.settingsPage;
 public class Settings {
     public static void changeNameOfStatus(String oldName, String newName) {
         Navigation.toSettingsPage();
-        settingsPage.getLeftMenuLeadsItem().click();
-        settingsPage.getLeadStatusesTab().click();
+        info("Opening leads settings menu.");
+        settingsPage.openLeadsSettings();
+        settingsPage.openLeadsSettingsStatusesTab();
         List<WebElement> statuses = settingsPage.getExistingStatusNames();
+        info("Editing lead status name.");
         for (WebElement curr : statuses) {
             if (curr.findElement(By.className("control-label")).getText().equals(oldName)) {
                 curr.findElement(By.className("edit")).click();

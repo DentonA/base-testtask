@@ -1,9 +1,16 @@
 package com.testbase.driver.pages;
 
+import com.testbase.driver.entities.Lead;
+import com.testbase.driver.utils.SelectorType;
+import com.testbase.driver.utils.Utils;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import static com.testbase.driver.utils.TestLogger.info;
+import static com.testbase.driver.utils.Utils.exists;
 
 /**
  * This class represents all WebElements that are located on the 'New Lead' page of the
@@ -88,6 +95,29 @@ public class AddNewLeadPage {
     public AddNewLeadPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
         this.driver = driver;
+    }
+
+    public void fillNewLeadForm(Lead lead) {
+        nameField.sendKeys(lead.getName());
+        lastNameField.sendKeys(lead.getLastName());
+        companyNameField.sendKeys(lead.getCompanyName());
+        titleField.sendKeys(lead.getTitle());
+        emailField.sendKeys(lead.getEmail());
+        mobilePhoneField.sendKeys(lead.getPhoneMobile());
+        workPhoneField.sendKeys(lead.getPhoneWork());
+        addressField.sendKeys(lead.getAddress());
+        cityField.sendKeys(lead.getCity());
+        zipField.sendKeys(lead.getZipCode());
+        regionField.sendKeys(lead.getState());
+    }
+
+    public void clickSaveButton() {
+        if (exists(saveButtonSel, SelectorType.CLASSNAME)) {
+            saveButton.click();
+        } else {
+            info("Failed clicking 'save' button. It doesn't exist on this page.");
+            throw new NoSuchElementException("Couldn't find 'save' button");
+        }
     }
 
     // Getters & Setters

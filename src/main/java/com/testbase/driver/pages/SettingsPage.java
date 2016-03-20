@@ -1,5 +1,7 @@
 package com.testbase.driver.pages;
 
+import com.testbase.driver.utils.SelectorType;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,11 +9,15 @@ import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
+import static com.testbase.driver.utils.TestLogger.info;
+import static com.testbase.driver.utils.Utils.exists;
+
 /**
  * This class represents all WebElements that are located on the Settings page of the
  * Base Platform (might be divided into number of small pages for diff settings)
  */
 public class SettingsPage {
+    public static final String leftMenuSel = "//div[@id='sidebar' and contains(@class, 'settings-menu')]";
     public static final String leftMenuManageAccountsItemSel = "//li[@class='account' or @class='account active']/a";
     public static final String leftMenuManageUsersItemSel = "//li[@class='users']/a";
     public static final String leftMenuProfileItemSel = "//li[@class='profile' or @class='profile active']/a";
@@ -143,6 +149,19 @@ public class SettingsPage {
     public SettingsPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
         this.driver = driver;
+    }
+
+    public void openLeadsSettings() {
+        if (exists(leftMenuLeadsItemSel, SelectorType.XPATH)) {
+            leftMenuLeadsItem.click();
+        } else {
+            info("Fail clicking leads settings menu item.");
+            throw new NoSuchElementException("Couldn't find leads settings menu item");
+        }
+    }
+
+    public void openLeadsSettingsStatusesTab() {
+        leadStatusesTab.click();
     }
 
     // Getters & Setters

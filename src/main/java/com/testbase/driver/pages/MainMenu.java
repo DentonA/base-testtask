@@ -1,14 +1,17 @@
 package com.testbase.driver.pages;
 
+import com.testbase.driver.utils.SelectorType;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.*;
+
 import static com.testbase.driver.utils.TestLogger.info;
 import static com.testbase.driver.utils.Utils.exists;
-
 
 /**
  * This class represents all WebElements that are located in MainMenu part of the
@@ -42,6 +45,32 @@ public class MainMenu {
     public static final String dropdownMenuPrivacyPolicySel = "//a[@class='support' and contains(text(), 'Policy')]";
     public static final String dropdownMenuTermsOfServiceSel = "//a[@class='support' and contains(text(), 'Terms')]";
     public static final String dropdownMenuLogoutSel = "agility-ignore";
+
+    private static Map<String, String> buttonNamesMap = new HashMap<>();
+
+    static {
+        buttonNamesMap.put(mainMenuMainDashboardButtonSel, "dashboard button");
+        buttonNamesMap.put(mainMenuLeadsButtonSel, "leads button");
+        buttonNamesMap.put(mainMenuContactsButtonSel, "contacts button");
+        buttonNamesMap.put(mainMenuSalesPipelineButtonSel, "sales pipeline button");
+        buttonNamesMap.put(mainMenuCalendarButtonSel, "calendar button");
+        buttonNamesMap.put(mainMenuTasksButtonSel, "menu tasks button");
+        buttonNamesMap.put(mainMenuSMSButtonSel, "communication center button");
+        buttonNamesMap.put(mainMenuReportsButtonSel, "reports button");
+        buttonNamesMap.put(mainMenuNotificationsWidgetButtonSel, "notifications widget button");
+        buttonNamesMap.put(mainMenuRecentlyViewedButtonSel, "recently viewed button");
+        buttonNamesMap.put(mainMenuQuickPhoneButtonSel, "quick phone button");
+        buttonNamesMap.put(dropdownMenuSettingsSel, "settings menu item");
+        buttonNamesMap.put(dropdownMenuManageAccountSel, "manage account menu item");
+        buttonNamesMap.put(dropdownMenuManageRepositorySel, "manage repository menu item");
+        buttonNamesMap.put(dropdownMenuKeyboardShortcutsSel, "keyboard shortcuts menu item");
+        buttonNamesMap.put(dropdownMenuSupportSel, "support menu item");
+        buttonNamesMap.put(dropdownMenuWebinarSel, "webinar menu item");
+        buttonNamesMap.put(dropdownMenuSuggestionsSel, "suggestions menu item");
+        buttonNamesMap.put(dropdownMenuPrivacyPolicySel, "privacy policy menu item");
+        buttonNamesMap.put(dropdownMenuTermsOfServiceSel, "terms of service menu item");
+        buttonNamesMap.put(dropdownMenuLogoutSel, "logout menu item");
+    }
 
     @FindBy(xpath = mainMenuMainDashboardButtonSel)
     private WebElement mainMenuMainDashboardButton;
@@ -125,17 +154,41 @@ public class MainMenu {
         this.driver = driver;
     }
 
+    public void clickButton(String selector, SelectorType type) {
+        if (exists(selector, type)) {
+            switch (type) {
+                case XPATH:
+                    driver.findElement(By.xpath(selector)).click();
+                    break;
+                case ID:
+                    driver.findElement(By.id(selector)).click();
+                    break;
+                case CLASSNAME:
+                    driver.findElement(By.className(selector)).click();
+                    break;
+            }
+        } else {
+            if (buttonNamesMap.get(selector) != null) {
+                info("Fail clicking " + buttonNamesMap.get(selector));
+                throw new NoSuchElementException("Couldn't find " + buttonNamesMap.get(selector));
+            } else {
+                info("Fail clicking button in main menu with selector: '" + selector + "'");
+                throw new NoSuchElementException("Couldn't find button in main menu with selector: '" + selector + "'");
+            }
+        }
+    }
+
     public void openDropdownMenu() {
-        if (exists(dropdownMenuClosedSel, "xpath")) {
+        if (exists(dropdownMenuClosedSel, SelectorType.XPATH)) {
             dropdownMenuClosed.click();
-        } else if (!exists(dropdownMenuOpenedSel, "xpath")) {
+        } else if (!exists(dropdownMenuOpenedSel, SelectorType.XPATH)) {
             info("Fail opening the main menu. It doesn't exist on the current screen.");
             throw new NoSuchElementException("Couldn't find main menu");
         }
     }
 
     public void clickLogout() {
-        if (exists(dropdownMenuLogoutSel, "classname"))
+        if (exists(dropdownMenuLogoutSel, SelectorType.CLASSNAME))
             dropdownMenuLogout.click();
         else {
             info("Fail clicking logout menu item.");

@@ -1,6 +1,6 @@
 package com.testbase.driver.pages;
 
-import com.testbase.driver.utils.Utils;
+import com.testbase.driver.utils.SelectorType;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -8,6 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import static com.testbase.driver.utils.TestLogger.info;
+import static com.testbase.driver.utils.Utils.exists;
 
 /**
  * This class represents all WebElements that are located on the Login page of the
@@ -43,7 +44,7 @@ public class LoginPage {
     }
 
     public void fillLogInDialog(String email, String password) {
-        if (Utils.exists(emailFieldSel, "id") && Utils.exists(passwordFieldSel, "id")) {
+        if (exists(emailFieldSel, SelectorType.ID) && exists(passwordFieldSel, SelectorType.ID)) {
             emailField.sendKeys(email);
             passwordField.sendKeys(password);
         } else {
@@ -53,7 +54,7 @@ public class LoginPage {
     }
 
     public void clickLoginButton() {
-        if (Utils.exists(loginButtonSel, "classname")) {
+        if (exists(loginButtonSel, SelectorType.CLASSNAME)) {
             loginButton.click();
         } else {
             info("Fail clicking login button. It doesn't exist on the current screen.");

@@ -6,9 +6,11 @@ import com.getbase.models.Address;
 import com.testbase.driver.Config;
 import com.testbase.driver.entities.Lead;
 import com.testbase.driver.utils.Utils;
+import org.openqa.selenium.NoSuchElementException;
 import org.testng.Assert;
 
 import static com.testbase.driver.pages.Pages.*;
+import static com.testbase.driver.utils.TestLogger.info;
 
 /**
  * This class contains actions connected with Leads in Base Platform (both GUI operated and API)
@@ -16,30 +18,20 @@ import static com.testbase.driver.pages.Pages.*;
 public class Leads {
     public static void createNewLead(Lead lead) {
         Navigation.toLeadsPage();
-        leadsPage.getNewLeadButton().click();
-        fillNewLeadForm(lead);
-        addNewLeadPage.getSaveButton().click();
+        info("Clicking new lead button.");
+        leadsPage.clickNewLeadButton();
+        Utils.waitForAddNewLeadPageOpen();
+        addNewLeadPage.fillNewLeadForm(lead);
+        addNewLeadPage.clickSaveButton();
+        info("Saving data of new lead: " + lead.getName() + " " + lead.getLastName());
         Utils.waitForLeadProfilePageOpen();
-    }
-
-    private static void fillNewLeadForm(Lead lead) {
-        addNewLeadPage.getNameField().sendKeys(lead.getName());
-        addNewLeadPage.getLastNameField().sendKeys(lead.getLastName());
-        addNewLeadPage.getCompanyNameField().sendKeys(lead.getCompanyName());
-        addNewLeadPage.getTitleField().sendKeys(lead.getTitle());
-        addNewLeadPage.getEmailField().sendKeys(lead.getEmail());
-        addNewLeadPage.getMobilePhoneField().sendKeys(lead.getPhoneMobile());
-        addNewLeadPage.getWorkPhoneField().sendKeys(lead.getPhoneWork());
-        addNewLeadPage.getAddressField().sendKeys(lead.getAddress());
-        addNewLeadPage.getCityField().sendKeys(lead.getCity());
-        addNewLeadPage.getZipField().sendKeys(lead.getZipCode());
-        addNewLeadPage.getRegionField().sendKeys(lead.getState());
     }
 
     public static void createNewLeadUsingAPI(Lead lead) {
         Client client = new Client(new Configuration.Builder().accessToken(Config.ACCESS_TOKEN).build());
         com.getbase.models.Lead baseLead = new com.getbase.models.Lead();
         copyLeadData(baseLead, lead);
+        info("Creating new lead using API: " + lead.getName() + " " + lead.getLastName());
         client.leads().create(baseLead);
     }
 
@@ -61,8 +53,10 @@ public class Leads {
 
     public static void assertStatusName(Lead lead, String statusName) {
         Navigation.toLeadsPage();
-        leadsPage.getLead(lead.getName(), lead.getLastName()).click();
+        if (!leadsPage.findAndOpenLeadProfile(lead))
+            throw new NoSuchElementException("Couldn't find lead in the leads list");
         Utils.waitForLeadProfilePageOpen();
+        info("Asserting that lead has '" + statusName + "' status.");
         Assert.assertEquals(leadProfilePage.getStatusName().getText().toLowerCase(), statusName.toLowerCase());
     }
 }

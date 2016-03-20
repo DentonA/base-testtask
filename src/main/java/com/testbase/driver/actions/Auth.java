@@ -2,6 +2,7 @@ package com.testbase.driver.actions;
 
 import com.testbase.driver.Config;
 import com.testbase.driver.pages.MainMenu;
+import com.testbase.driver.utils.SelectorType;
 import com.testbase.driver.utils.Utils;
 
 import static com.testbase.driver.pages.Pages.loginPage;
@@ -28,7 +29,7 @@ public class Auth {
 
     public static void logOutIfLoggedIn() {
         info("Check if client is logged in.");
-        if (Utils.exists(MainMenu.dropdownMenuOpenedSel, "xpath") || Utils.exists(MainMenu.dropdownMenuClosedSel, "xpath")) {
+        if (Utils.exists(MainMenu.dropdownMenuOpenedSel, SelectorType.XPATH) || Utils.exists(MainMenu.dropdownMenuClosedSel, SelectorType.XPATH)) {
             info("Client logged in.");
             logOut();
         } else {

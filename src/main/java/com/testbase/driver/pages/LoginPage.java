@@ -1,9 +1,13 @@
 package com.testbase.driver.pages;
 
+import com.testbase.driver.utils.Utils;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import static com.testbase.driver.utils.TestLogger.info;
 
 /**
  * This class represents all WebElements that are located on the Login page of the
@@ -36,6 +40,25 @@ public class LoginPage {
     public LoginPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
         this.driver = driver;
+    }
+
+    public void fillLogInDialog(String email, String password) {
+        if (Utils.exists(emailFieldSel, "id") && Utils.exists(passwordFieldSel, "id")) {
+            emailField.sendKeys(email);
+            passwordField.sendKeys(password);
+        } else {
+            info("Fail opening login page.");
+            throw new NoSuchElementException("Couldn't find login email or password fields");
+        }
+    }
+
+    public void clickLoginButton() {
+        if (Utils.exists(loginButtonSel, "classname")) {
+            loginButton.click();
+        } else {
+            info("Fail clicking login button. It doesn't exist on the current screen.");
+            throw new NoSuchElementException("Couldn't find login button");
+        }
     }
 
     // Getters & Setters

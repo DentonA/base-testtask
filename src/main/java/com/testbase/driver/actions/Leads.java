@@ -6,8 +6,6 @@ import com.getbase.models.Address;
 import com.testbase.driver.Config;
 import com.testbase.driver.entities.Lead;
 import com.testbase.driver.utils.Utils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
 import static com.testbase.driver.pages.Pages.*;
@@ -66,6 +64,5 @@ public class Leads {
         leadsPage.getLead(lead.getName(), lead.getLastName()).click();
         Utils.waitForLeadProfilePageOpen();
         Assert.assertEquals(leadProfilePage.getStatusName().getText().toLowerCase(), statusName.toLowerCase());
-        System.out.println("Assertion successful");
     }
 }

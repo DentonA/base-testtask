@@ -1,9 +1,14 @@
 package com.testbase.driver.pages;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import static com.testbase.driver.utils.TestLogger.info;
+import static com.testbase.driver.utils.Utils.exists;
+
 
 /**
  * This class represents all WebElements that are located in MainMenu part of the
@@ -11,7 +16,7 @@ import org.openqa.selenium.support.PageFactory;
  */
 public class MainMenu {
     // main menu items
-    public static final String mainMenuMainDashboardButtonSel = "nav-dashboard";
+    public static final String mainMenuMainDashboardButtonSel = "//.[@id='nav-dashboard']";
     public static final String mainMenuLeadsButtonSel = "nav-leads";
     public static final String mainMenuContactsButtonSel = "nav-contacts";
     public static final String mainMenuSalesPipelineButtonSel = "nav-sales";
@@ -38,7 +43,7 @@ public class MainMenu {
     public static final String dropdownMenuTermsOfServiceSel = "//a[@class='support' and contains(text(), 'Terms')]";
     public static final String dropdownMenuLogoutSel = "agility-ignore";
 
-    @FindBy(id = mainMenuMainDashboardButtonSel)
+    @FindBy(xpath = mainMenuMainDashboardButtonSel)
     private WebElement mainMenuMainDashboardButton;
 
     @FindBy(id = mainMenuLeadsButtonSel)
@@ -118,6 +123,24 @@ public class MainMenu {
     public MainMenu(WebDriver driver) {
         PageFactory.initElements(driver, this);
         this.driver = driver;
+    }
+
+    public void openDropdownMenu() {
+        if (exists(dropdownMenuClosedSel, "xpath")) {
+            dropdownMenuClosed.click();
+        } else if (!exists(dropdownMenuOpenedSel, "xpath")) {
+            info("Fail opening the main menu. It doesn't exist on the current screen.");
+            throw new NoSuchElementException("Couldn't find main menu");
+        }
+    }
+
+    public void clickLogout() {
+        if (exists(dropdownMenuLogoutSel, "classname"))
+            dropdownMenuLogout.click();
+        else {
+            info("Fail clicking logout menu item.");
+            throw new NoSuchElementException("Couldn't find logout menu item");
+        }
     }
 
     // Getters & Setters

@@ -22,6 +22,34 @@ public class Lead {
         lastName = "defaultLastName - " + Calendar.getInstance().getTime();
     }
 
+    public Lead(Lead lead) {
+        name = lead.getName();
+        lastName = lead.getLastName();
+        companyName = lead.getCompanyName();
+        title = lead.getTitle();
+        email = lead.getEmail();
+        phoneMobile = lead.getPhoneMobile();
+        phoneWork = lead.getPhoneWork();
+        address = lead.getAddress();
+        city = lead.getCity();
+        zipCode = lead.getZipCode();
+        state = lead.getState();
+    }
+
+    public void copyTo(Lead lead) {
+        lead.setName(name);
+        lead.setLastName(lastName);
+        lead.setCompanyName(companyName);
+        lead.setTitle(title);
+        lead.setEmail(email);
+        lead.setPhoneMobile(phoneMobile);
+        lead.setPhoneWork(phoneWork);
+        lead.setAddress(address);
+        lead.setCity(city);
+        lead.setZipCode(zipCode);
+        lead.setState(state);
+    }
+
     public String getName() {
         return name;
     }

@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -32,8 +33,9 @@ public class LeadsPage {
     public static final String expandActiveFiltersButtonSel = "//a[@class='btn expand-active-filters']";
     public static final String clearAllFiltersButtonSel = "//a[@class='btn clear-all-filters']";
     // single lead elements
-    public static final String singleUnknownLeadSel = "//a[@class='lead-name' and contains(text(), '%LEADNAME%')]";
-    public static final String selectThisLeadSel = "//div[@class='select']/input";
+    public static final String singleUnknownLeadSel = "//li[contains(@id, 'lead-') and .//a[@class='lead-name' and contains(text(), '%LEADNAME%')]]";
+    public static final String selectCheckboxForThisLeadSel = "//div[@class='select']/input";
+    public static final String thisLeadNameSel = "//a[@class='lead-name']";
     public static final String editThisLeadButtonSel = "//a[@class='hoverable edit']";
     public static final String convertThisLeadButtonSel = "//div[@class='quick-info hoverable']/span/a";
 
@@ -73,7 +75,7 @@ public class LeadsPage {
     @FindBy(xpath = clearAllFiltersButtonSel)
     private WebElement clearAllFiltersButton;
 
-    @FindBy(xpath = selectThisLeadSel)
+    @FindBy(xpath = selectCheckboxForThisLeadSel)
     private WebElement selectThisLead;
 
     @FindBy(xpath = editThisLeadButtonSel)
@@ -98,7 +100,7 @@ public class LeadsPage {
         }
     }
 
-    public boolean findAndOpenLeadProfile(Lead lead) {
+    private WebElement findLeadInLeadList(Lead lead) {
         String fullName;
         if (lead.getName() != null && !lead.getName().equals("")) {
             fullName = lead.getName() + " " + lead.getLastName();
@@ -108,10 +110,29 @@ public class LeadsPage {
         String leadSelector = singleUnknownLeadSel.replace("%LEADNAME%", fullName);
         if (exists(leadSelector, SelectorType.XPATH)) {
             info("Lead with fullname '" + fullName + "' found. Opening profile.");
-            allLeadNamesBlock.findElement(By.xpath(leadSelector)).click();
-            return true;
+            return driver.findElement(By.xpath(leadSelector));
         } else {
             info("Lead with fullname '" + fullName + "' doesn't exist");
+        }
+        return null;
+    }
+
+    public boolean openLeadProfile(Lead lead) {
+        WebElement targetLead = findLeadInLeadList(lead);
+        if (targetLead != null) {
+            targetLead.findElement(By.xpath(thisLeadNameSel)).click();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean openEditLeadForm(Lead lead) {
+        WebElement targetLead = findLeadInLeadList(lead);
+        if (targetLead != null) {
+            Actions mouse = new Actions(driver);
+            mouse.moveToElement(targetLead.findElement(By.xpath(editThisLeadButtonSel))).perform();
+            targetLead.findElement(By.xpath(editThisLeadButtonSel)).click();
+            return true;
         }
         return false;
     }

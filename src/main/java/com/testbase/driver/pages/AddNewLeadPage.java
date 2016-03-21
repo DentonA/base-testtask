@@ -98,16 +98,27 @@ public class AddNewLeadPage {
     }
 
     public void fillNewLeadForm(Lead lead) {
+        nameField.clear();
         nameField.sendKeys(lead.getName());
+        lastNameField.clear();
         lastNameField.sendKeys(lead.getLastName());
+        companyNameField.clear();
         companyNameField.sendKeys(lead.getCompanyName());
+        titleField.clear();
         titleField.sendKeys(lead.getTitle());
+        emailField.clear();
         emailField.sendKeys(lead.getEmail());
+        mobilePhoneField.clear();
         mobilePhoneField.sendKeys(lead.getPhoneMobile());
+        workPhoneField.clear();
         workPhoneField.sendKeys(lead.getPhoneWork());
+        addressField.clear();
         addressField.sendKeys(lead.getAddress());
+        cityField.clear();
         cityField.sendKeys(lead.getCity());
+        zipField.clear();
         zipField.sendKeys(lead.getZipCode());
+        regionField.clear();
         regionField.sendKeys(lead.getState());
     }
 

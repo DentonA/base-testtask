@@ -27,6 +27,16 @@ public class Leads {
         Utils.waitForLeadProfilePageOpen();
     }
 
+    public static void editLeadDataFromLeadsPage(Lead from, Lead to) {
+        Navigation.toLeadsPage();
+        info("Opening edit lead form at Leads page");
+        leadsPage.openEditLeadForm(from);
+        Utils.waitForAddNewLeadPageOpen();
+        addNewLeadPage.fillNewLeadForm(to);
+        addNewLeadPage.clickSaveButton();
+        info("Saving edited lead data.");
+    }
+
     public static void createNewLeadUsingAPI(Lead lead) {
         Client client = new Client(new Configuration.Builder().accessToken(Config.ACCESS_TOKEN).build());
         com.getbase.models.Lead baseLead = new com.getbase.models.Lead();
@@ -53,7 +63,7 @@ public class Leads {
 
     public static void assertStatusName(Lead lead, String statusName) {
         Navigation.toLeadsPage();
-        if (!leadsPage.findAndOpenLeadProfile(lead))
+        if (!leadsPage.openLeadProfile(lead))
             throw new NoSuchElementException("Couldn't find lead in the leads list");
         Utils.waitForLeadProfilePageOpen();
         info("Asserting that lead has '" + statusName + "' status.");

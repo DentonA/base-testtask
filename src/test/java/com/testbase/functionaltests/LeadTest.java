@@ -28,6 +28,7 @@ public class LeadTest {
 
     @AfterMethod(alwaysRun = true)
     public void afterTest() {
+        Settings.changeNameOfStatus("CustomName", "New");
         Auth.logOutIfLoggedIn();
     }
 
